@@ -1,1 +1,1 @@
-web: waitress-serve --listen=*:8000  expensewebsite.wsgi:application
+web: gunicorn expensewebsite.wsgi

@@ -9,6 +9,7 @@ psycopg2 = "*"
 django-heroku = "*"
 gunicorn = "*"
 waitress = "*"
+whitenoise = "*"
 
 [dev-packages]
 
