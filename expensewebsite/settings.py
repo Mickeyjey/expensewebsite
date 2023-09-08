@@ -133,6 +133,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+
+django_heroku.settings(locals())
+
+
 STORAGES = {
     # ...
     "staticfiles": {
@@ -140,4 +145,4 @@ STORAGES = {
     },
 }
 
-django_heroku.settings(locals())
+del config['STATICFILES_STORAGE']
