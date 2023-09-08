@@ -137,7 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
 
-
+config = locals()
 STORAGES = {
     # ...
     "staticfiles": {
