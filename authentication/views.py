@@ -29,9 +29,11 @@ class UserSignUp(View):
         return render(request,"auths/register.html")
     
     def post(self,request):
-        data = json.load(request)
-        email = data["email"]
-        if(User.objects.filter("email"==email).exists()):
-            return 
+        data = request.POST
+        if  User.objects.filter(username=data["username"]).exists():
+            return JsonResponse({"error":"User already exists"})
         else:
-            return JsonResponse({"error":"something happens"})
+            user = User.objects.create_user(data["username"], data["email"],data["password"])
+            user.save()
+            return render(request,"expenses/index.html")
+            
