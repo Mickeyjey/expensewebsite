@@ -2,11 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
-import json
-from django.http import Http404
+from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.core import serializers
-from django.contrib.auth import authenticate
 
 class UserLogin(View):
     def get(self,request):
@@ -36,4 +33,34 @@ class UserSignUp(View):
             user = User.objects.create_user(data["username"], data["email"],data["password"])
             user.save()
             return render(request,"expenses/index.html")
+
+class ResetPassword(View):
+    def get(self,request):
+        return render(request,"auths/resetpasword.html")
+    
+    def post(self,request):
+        data = request.POST
+        if "email" in data:
+            if  User.objects.filter(email=data["email"]).exists():
+                user = User.objects.get(email=data["email"])
+                send_mail(
+                    subject="verify email",
+                    message="1234",
+                    from_email="koonimoapaa@gmail.com",
+                    recipient_list=[user.email],
+                    fail_silently=True
+                    
+                )
+                return render(request,"auths/setpassword.html")
+            else:
+                return JsonResponse({"error":"no user with such email"})
+        
+        if "password" in data:
+            if  User.objects.filter(email=data["code"]).exists():
+                user = User.objects.get(email=data["code"])
+                user.set_password(data["password"])
+                user.save()
+                return render(request,"expenses/index.html")
+            else:
+                return JsonResponse({"error":"no user with such email"})
             
