@@ -6,6 +6,7 @@ import json
 from django.http import Http404
 from django.http import JsonResponse
 from django.core import serializers
+from django.contrib.auth import authenticate
 
 class UserLogin(View):
     def get(self,request):
@@ -14,14 +15,13 @@ class UserLogin(View):
     def post(self,request):
         data = request.POST
         if User.objects.filter(username=data["username"]).exists():
-            user = User.objects.filter(username=data["username"])
-            if user.filter(password=data["password"]).exists():
-                person = user.filter(password=data["password"]).first()
-                return JsonResponse({"user":person})
+            user = User.objects.get(username=data["username"])       
+            if user.check_password(raw_password=data["password"]):
+                return render(request,"expenses/index.html")
             else:
                 return JsonResponse({"error":"wrong password"})
         else:
-            return Http404("Not a registered user")
+            return JsonResponse({"error":"entirely wrong"})
         
 
 class UserSignUp(View):
